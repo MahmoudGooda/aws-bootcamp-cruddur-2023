@@ -16,9 +16,13 @@ I created a group named "admins", attached administrator access policy to that g
 I used us-east-1 region and opened cloudshell in:  
 ![Cloudshell](https://user-images.githubusercontent.com/105418424/219478337-af5eaa5f-1ba7-4eaf-bd67-d4df863854a4.png)
 
-Created Access Keys for IAM user:  
+Created IAM user Access Keys:  
 ![Access Keys1](https://user-images.githubusercontent.com/105418424/219480694-42d9bb06-eeee-4f6a-967d-576d4e8e8500.png)
-![Access Keys2](https://user-images.githubusercontent.com/105418424/219480839-c969f024-8522-45c9-b343-d3795b3b662a.png)
+![Access Keys2](https://user-images.githubusercontent.com/105418424/219480839-c969f024-8522-45c9-b343-d3795b3b662a.png)  
+
+### Installed AWS CLI V2 in Gitpod. (I have it installed locally & integrated with local VSCode as well)
+![CLIV2](https://user-images.githubusercontent.com/105418424/219508531-31980e9b-33c7-4e18-834b-702734a6a452.png)
+
 
 Enabled Billing Alerts from Billing prefrences page.
 
