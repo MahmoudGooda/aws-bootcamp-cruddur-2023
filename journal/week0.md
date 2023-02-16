@@ -35,3 +35,7 @@ Created Billing Alarm that will send SNS notification to my email address when e
 ![Alarm1](https://user-images.githubusercontent.com/105418424/219491854-a124c0b3-4081-4967-a869-3e8e28438727.png)  
 ![Alarm2](https://user-images.githubusercontent.com/105418424/219492470-5c5e3f5d-4260-41f6-bdf8-e52b132d58aa.png)
 
+## Budget  
+Created 2 budgets (Zero spend-budget & Monthly cost budget) with notification to my email address.  
+![Budgets](https://user-images.githubusercontent.com/105418424/219495558-bbf956d2-2bcd-49c8-aa3d-aaecabf50324.png)
+
