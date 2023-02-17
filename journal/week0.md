@@ -43,3 +43,7 @@ Created Billing Alarm that will send SNS notification to my email address when e
 Created 2 budgets (Zero spend-budget & Monthly cost budget) with notification to my email address.  
 ![Budgets](https://user-images.githubusercontent.com/105418424/219495558-bbf956d2-2bcd-49c8-aa3d-aaecabf50324.png)
 
+# Week0 Challenges
+I Destroyed any access keys & enabled MFA for root account  
+![image](https://user-images.githubusercontent.com/105418424/219717694-ac12e886-ff0c-470b-84a9-137a2cd37632.png)
+
