@@ -45,5 +45,7 @@ Created 2 budgets (Zero spend-budget & Monthly cost budget) with notification to
 
 # Week0 Challenges
 I Destroyed any access keys & enabled MFA for root account  
-![image](https://user-images.githubusercontent.com/105418424/219717694-ac12e886-ff0c-470b-84a9-137a2cd37632.png)
+![image](https://user-images.githubusercontent.com/105418424/219717694-ac12e886-ff0c-470b-84a9-137a2cd37632.png)  
 
+Created an event bridge rule to send SNS notification to my email when EC2 service health has issue  
+![image](https://user-images.githubusercontent.com/105418424/219786493-a98c0c88-b8f7-46a1-937d-a4df30d37943.png)
