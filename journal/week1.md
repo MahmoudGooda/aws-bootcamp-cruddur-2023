@@ -18,8 +18,19 @@ Following along with the *Create the notification feature* video:
 ![image](https://user-images.githubusercontent.com/105418424/219977309-6fcbee59-7ffd-4af7-91ec-80e97f611620.png)
 
 ## Write a Flask Backend Endpoint for Notifications  
-* I created notifications endpoint, (created a python file for notifications activities) within backend_flask folder.
+* I created notifications endpoint, created a python file for notifications activities within *backend_flask* folder.
 I copied the *home activities* contents, then made some edits to be for notifications activites.
+
 ![image](https://user-images.githubusercontent.com/105418424/220108596-46937dfd-13ea-4e28-86d8-c40e75d39956.png)
 ![image](https://user-images.githubusercontent.com/105418424/220108700-31d64654-d281-4ae0-bccc-e065190145c6.png)
+
+## Write a React Page for Notifications
+* Like the other pages, I created a js file for the notifications page (same as homefeed page with some modifications) and a .css file for styling if needed.  
+
+![image](https://user-images.githubusercontent.com/105418424/220121238-e4529ea5-b91e-4370-8fb4-06dc759fd85b.png)
+
+Finally we can get the notifications page same as expected!
+
+![image](https://user-images.githubusercontent.com/105418424/220122204-020c0ba1-f584-416d-8164-6e89694ee934.png)
+
 
