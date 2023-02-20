@@ -16,3 +16,10 @@ Following along with the *Create the notification feature* video:
 * In the *openapi-3.0.yml* file, I added a new path *"/api/activities/notifications:"*, description, tags, and response details.
 
 ![image](https://user-images.githubusercontent.com/105418424/219977309-6fcbee59-7ffd-4af7-91ec-80e97f611620.png)
+
+## Write a Flask Backend Endpoint for Notifications  
+* I created notifications endpoint, (created a python file for notifications activities) within backend_flask folder.
+I copied the *home activities* contents, then made some edits to be for notifications activites.
+![image](https://user-images.githubusercontent.com/105418424/220108596-46937dfd-13ea-4e28-86d8-c40e75d39956.png)
+![image](https://user-images.githubusercontent.com/105418424/220108700-31d64654-d281-4ae0-bccc-e065190145c6.png)
+
