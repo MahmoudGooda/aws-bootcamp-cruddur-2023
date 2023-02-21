@@ -33,6 +33,8 @@ Finally we can get the notifications page same as expected!
 
 ![image](https://user-images.githubusercontent.com/105418424/220122204-020c0ba1-f584-416d-8164-6e89694ee934.png)
 
+
+
 ### Run DynamoDB Local Container and ensure it works
 * After adding DynamoDB Local and Postgres to that *Docker-compose.yml* file.
 I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
@@ -44,3 +46,10 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ![image](https://user-images.githubusercontent.com/105418424/220127064-16751e87-33ff-4070-8f2a-1d3cc8598ed7.png)
 
+## Homework Challenges
+### Run the dockerfile CMD as an external script
+* I had to install the *flask* and *flask-cors* modules manually before running the command. (because I had ***flask module not found*** and ***flask-cors module not found*** error).
+* I faced a server error after opening the URL because I forgot to set the environment variables for BACKEND_URL & FRONTEND_URL
+* After setting them and running `python3 -m flask run --host=0.0.0.0 --port=4567`. I could see the JSON reply from newly created notifications page!
+
+![image](https://user-images.githubusercontent.com/105418424/220353995-01328142-2a1d-45a6-a714-b9486d98da69.png)
