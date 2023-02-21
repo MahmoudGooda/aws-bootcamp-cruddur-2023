@@ -53,3 +53,12 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 * After setting them and running `python3 -m flask run --host=0.0.0.0 --port=4567`. I could see the JSON reply from newly created notifications page!
 
 ![image](https://user-images.githubusercontent.com/105418424/220353995-01328142-2a1d-45a6-a714-b9486d98da69.png)
+
+### Push and tag a image to DockerHub
+* To push the image, first I logged into my DockerHub account with `docker login`  
+* Created the repository with the image name on DockerHub.
+* Tagged the image with *myaccount/imagename:1.0* as the first version and pushed it.
+* [Docker Image repo Link](https://hub.docker.com/repository/docker/mahmoudgooda/aws-bootcamp-cruddur-2023-backend-flask/general "Docker Image repo")
+
+![image](https://user-images.githubusercontent.com/105418424/220362554-0b8e0b23-ca4c-48f3-a979-d6715f61b346.png)
+![image](https://user-images.githubusercontent.com/105418424/220363043-8804ebbe-1195-4f85-8d21-af643d233a6a.png)
