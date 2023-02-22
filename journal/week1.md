@@ -63,3 +63,16 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ![image](https://user-images.githubusercontent.com/105418424/220362554-0b8e0b23-ca4c-48f3-a979-d6715f61b346.png)
 ![image](https://user-images.githubusercontent.com/105418424/220363043-8804ebbe-1195-4f85-8d21-af643d233a6a.png)
+
+### Use multi-stage building for a Dockerfile build
+* I created a new Dockerfile & splitted the image creation instructions into multi stages.
+* The first stage ***build*** has dependencies installed, The 2nd stage copied the contents, exposed the required port, and ran npm.
+* [Dockerfile Link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/blob/main/frontend-react-js/Dockerfile.multi)
+
+![image](https://user-images.githubusercontent.com/105418424/220774698-d48685a5-b53a-4f97-ad6c-478b31d6d358.png)
+
+### Implement a healthcheck in the V3 Docker compose file
+* Implemented a healthchek for the backend container and force stopped it.
+* Showing the ***unhealthy*** status when inspected the container in terminal. While the frontend status is ***running***.
+
+![image](https://user-images.githubusercontent.com/105418424/220782824-a772dc8c-350b-45fa-9869-d36b1fb7c623.png)
