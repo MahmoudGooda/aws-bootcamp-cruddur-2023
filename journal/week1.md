@@ -48,11 +48,12 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ## Homework Challenges
 ### Run the dockerfile CMD as an external script
-* I had to install the *flask* and *flask-cors* modules manually before running the command. (because I had ***flask module not found*** and ***flask-cors module not found*** error).
-* I faced a server error after opening the URL because I forgot to set the environment variables for BACKEND_URL & FRONTEND_URL
-* After setting them and running `python3 -m flask run --host=0.0.0.0 --port=4567`. I could see the JSON reply from newly created notifications page!
+* I made a bash script to set the env. variables, install the requirments, and run the flask locally.
+* I faced a server error after opening the URL because I forgot to set the environment variables for BACKEND_URL & FRONTEND_URL.
+* After setting them and running the script again. I could see the JSON reply from newly created notifications page!
+* [Script file link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/blob/main/backend-flask/CMD-script.sh)
 
-![image](https://user-images.githubusercontent.com/105418424/220353995-01328142-2a1d-45a6-a714-b9486d98da69.png)
+![image](https://user-images.githubusercontent.com/105418424/220675710-cd02fd99-40a3-43d6-bc50-6923a004293d.png)
 
 ### Push and tag a image to DockerHub
 * To push the image, first I logged into my DockerHub account with `docker login`  
