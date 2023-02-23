@@ -48,12 +48,11 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ## Homework Challenges
 ### Run the dockerfile CMD as an external script
-* I made a bash script to set the env. variables, install the requirments, and run the flask locally.
-* I faced a server error after opening the URL because I forgot to set the environment variables for BACKEND_URL & FRONTEND_URL.
-* After setting them and running the script again. I could see the JSON reply from newly created notifications page!
+* I created a script file containing the CMD as an entrypoint for the Dockerfile.
+
 * [Script file link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/blob/main/backend-flask/CMD-script.sh)
 
-![image](https://user-images.githubusercontent.com/105418424/220675710-cd02fd99-40a3-43d6-bc50-6923a004293d.png)
+![image](https://user-images.githubusercontent.com/105418424/221034093-016b3a07-6dd0-4d62-a999-8f590ecbbaef.png)
 
 ### Push and tag a image to DockerHub
 * To push the image, first I logged into my DockerHub account with `docker login`  
