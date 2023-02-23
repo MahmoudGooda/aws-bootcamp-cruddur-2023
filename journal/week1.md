@@ -72,7 +72,8 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 ![image](https://user-images.githubusercontent.com/105418424/220774698-d48685a5-b53a-4f97-ad6c-478b31d6d358.png)
 
 ### Implement a healthcheck in the V3 Docker compose file
-* Implemented a healthchek for the backend container and force stopped it.
-* Showing the ***unhealthy*** status when inspected the container in terminal. While the frontend status is ***running***.
+* Implemented a healthchek for the backend container (curl to URL which giving *404 Not Found* already).
+* I received error regarding the ***curl*** command not found in $PATH, So I added installation instruction in the Dockerfile.
+* Showing the ***unhealthy*** status when inspected the container.
 
-![image](https://user-images.githubusercontent.com/105418424/220782824-a772dc8c-350b-45fa-9869-d36b1fb7c623.png)
+![image](https://user-images.githubusercontent.com/105418424/220932445-679c3a5f-bd0e-43af-83a7-1a2efb97d543.png)

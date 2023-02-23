@@ -10,7 +10,7 @@ services:
     volumes:
       - ./backend-flask:/backend-flask
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4567"]
+      test: ["CMD", "curl", "-f", "https://4567-mahmoudgood-awsbootcamp-pjjngl76psh.ws-eu87.gitpod.io"]
       interval: 1m30s
       timeout: 10s
       retries: 3
