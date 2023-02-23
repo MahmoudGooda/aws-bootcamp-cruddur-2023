@@ -77,3 +77,9 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 * Showing the ***unhealthy*** status when inspected the container.
 
 ![image](https://user-images.githubusercontent.com/105418424/220932445-679c3a5f-bd0e-43af-83a7-1a2efb97d543.png)
+
+* Implemented a healthchek for the backend container, Stopped the container and checked health status again.
+* I received error regarding the ***curl*** command not found in $PATH, So I added curl installation instruction in the Dockerfile.
+* Container health status turned into ***unhealthy*** after stopping it.
+
+![image](https://user-images.githubusercontent.com/105418424/220940695-8090d974-db3f-4303-9605-e8788a1a7f6b.png)
