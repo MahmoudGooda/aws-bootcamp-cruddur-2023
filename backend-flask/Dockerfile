@@ -7,8 +7,8 @@ RUN pip3 install -r requirements.txt
 RUN apt-get update && apt-get install curl -y
 
 COPY . .
-
+RUN chmod +x CMD-script.sh
 ENV FLASK_ENV=development
 
 EXPOSE ${PORT}
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567"]
+ENTRYPOINT ./CMD-script.sh
