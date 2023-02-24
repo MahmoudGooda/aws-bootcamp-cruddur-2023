@@ -12,4 +12,4 @@ RUN chmod +x CMD-script.sh
 ENV FLASK_ENV=development
 
 EXPOSE ${PORT}
-ENTRYPOINT ./CMD-script.sh
+CMD ["/bin/bash", "./CMD-script.sh"] 
