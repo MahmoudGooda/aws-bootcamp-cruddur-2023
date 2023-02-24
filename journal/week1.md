@@ -79,6 +79,11 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ![image](https://user-images.githubusercontent.com/105418424/220940695-8090d974-db3f-4303-9605-e8788a1a7f6b.png)
 
+### Docker on localmachine and same containers are running outside of Gitpod.
+* Using local VSCode & WSL installed, cloned the repo, built images, and ran containers.
+
+![local docker](https://user-images.githubusercontent.com/105418424/221235322-e9d60a95-0762-4a97-9233-928301bcf342.PNG)
+
 ### Launch an EC2 instance that has docker installed, and pull a container to demonstrate you can run your own docker processes.
 * Launched an EC2 instance, installed docker, pulled the image which has been pushed earlier from my DockerHub repo.
   
