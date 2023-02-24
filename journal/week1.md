@@ -13,7 +13,8 @@
 
 ### Document the Notification Endpoint for the OpenAI Document
 Following along with the *Create the notification feature* video:
-* In the *openapi-3.0.yml* file, I added a new path *"/api/activities/notifications:"*, description, tags, and response details.
+* In the *openapi-3.0.yml* file, I added a new path *"/api/activities/notifications:"*, description, tags, and response details.   
+* [openapi-3.0.yml file link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/blob/main/backend-flask/openapi-3.0.yml)
 
 ![image](https://user-images.githubusercontent.com/105418424/219977309-6fcbee59-7ffd-4af7-91ec-80e97f611620.png)
 
