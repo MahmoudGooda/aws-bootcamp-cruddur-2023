@@ -49,11 +49,10 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ## Homework Challenges
 ### Run the dockerfile CMD as an external script
-* I created a script file containing the CMD as an entrypoint for the Dockerfile.
+* Created a script file containing the flask run command and used it in Dockerfile instead.
 
 * [Script file link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/blob/main/backend-flask/CMD-script.sh)
-
-![image](https://user-images.githubusercontent.com/105418424/221034093-016b3a07-6dd0-4d62-a999-8f590ecbbaef.png)
+* [Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/7f9f06479b34b5f1f07140caffb74bdbab4eeffb)
 
 ### Push and tag a image to DockerHub
 * To push the image, first I logged into my DockerHub account with `docker login`  
@@ -78,6 +77,12 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 * Container health status turned into ***unhealthy*** after stopping it.
 
 ![image](https://user-images.githubusercontent.com/105418424/220940695-8090d974-db3f-4303-9605-e8788a1a7f6b.png)
+
+### Research best practices of Dockerfiles and attempt to implement it in your Dockerfile
+* Created `.dockerignore` file containing items to be excluded while building images. (mistakenly created in wrong folder > moved to root folder)
+* Used *Multi-stage* which helped reducing the image size leveraging build cache. [Commit Link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/4f09975b475a7559dc2dd7e49f46cc211c8bc2a0).
+* Will keep using multi-line arguments and will make sure to sort it alphanumerically to leverage caching and get it easily readable! [Commit Link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/6d9229918bcbc422cb313133f9894ef7646eb4a9).
+
 
 ### Docker on localmachine and same containers are running outside of Gitpod.
 * Using local VSCode & WSL installed, cloned the repo, built images, and ran containers.
