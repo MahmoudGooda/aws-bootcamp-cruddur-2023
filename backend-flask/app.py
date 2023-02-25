@@ -32,9 +32,6 @@ tracer = trace.get_tracer(__name__)
 
 app = Flask(__name__)
 
-
-app = Flask(__name__)
-
 # Honeycomb -----------
 # Initialize automatic instrumentation with Flask
 FlaskInstrumentor().instrument_app(app)
