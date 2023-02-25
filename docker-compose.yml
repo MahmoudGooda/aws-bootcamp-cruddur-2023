@@ -13,7 +13,7 @@ services:
     volumes:
       - ./backend-flask:/backend-flask
     healthcheck:
-      test: ["CMD-SHELL", "curl -f https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}"]
+      test: ["CMD-SHELL", "curl -f https://4567-${GITPOD_WORKSPACE_ID}.${GITPOD_WORKSPACE_CLUSTER_HOST}/api/activities/home"]
       interval: 10s
       timeout: 10s
       retries: 3
