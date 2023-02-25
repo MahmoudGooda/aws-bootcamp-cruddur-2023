@@ -72,7 +72,7 @@ I ran some commands to ensure it works ( same from *100DaysOfCloud* repo).
 
 ### Implement a healthcheck in the V3 Docker compose file
 
-* Implemented a healthchek for the backend container, Stopped the container and checked health status again.
+* Implemented a healthchek for the backend and frontend containers, Stopped the container and checked health status again.
 * I received error regarding the ***curl*** command not found in $PATH, So I added curl installation instruction in the Dockerfile.
 * Container health status turned into ***unhealthy*** after stopping it.
 
