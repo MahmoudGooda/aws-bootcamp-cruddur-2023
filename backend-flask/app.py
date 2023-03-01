@@ -38,6 +38,7 @@ import rollbar
 import rollbar.contrib.flask
 from flask import got_request_exception
 
+# CloudWatch Logs -----------
 # Configuring Logger to Use CloudWatch
 # LOGGER = logging.getLogger(__name__)
 # LOGGER.setLevel(logging.DEBUG)
@@ -106,6 +107,7 @@ cors = CORS(
   methods="OPTIONS,GET,HEAD,POST"
 )
 
+# CloudWatch Logs -----------
 # @app.after_request
 # def after_request(response):
 #     timestamp = strftime('[%Y-%b-%d %H:%M]')
