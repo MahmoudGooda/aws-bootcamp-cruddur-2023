@@ -138,6 +138,52 @@ aws xray create-sampling-rule --cli-input-json file://aws/json/xray.json
 * Check traces from AWS X-RAY
 
 ![image](https://user-images.githubusercontent.com/105418424/222764548-209e1ed3-9604-4977-b5af-fd98c02b2dee.png)
+
+## Instrument AWS X-Ray Subsegments
+* After watching Andrew Brown solving instrument subsegments (and thanks to olley's blog as well)
+
+Using X-Ray recorder ***capture*** in `app.py`  
+```py
+@xray_recorder.capture('activities_home')
+```
+```py
+@xray_recorder.capture('activities_users')
+``` 
+```py
+@xray_recorder.capture('activities_show')
+```
+
+[Commit Link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/24a6bb07664dea479948f2992911097d197bf54a)
+
+---------------
+### Add subsegment
+* Add `mock-data` subsegment to `user_activities.py`  
+```py
+subsegment = xray_recorder.begin_subsegment('mock-data')
+          # xray ---
+      dict = {
+        "now": now.isoformat(),
+        "results-size": len(model['data'])
+      }
+      subsegment.put_metadata('key', dict, 'namespace')
+      xray_recorder.end_subsegment()
+    finally:  
+    #  # Close the segment
+      xray_recorder.end_subsegment()
+```
+[Commit Link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/0105e01c225a398e4a718789bb90cb80239c134a)
+
+---------------
+### Check Subsegment trace
+
+* Test by clicking the user activity endpoint `@AndrewBrown`  
+* check X Ray traces  
+
+![X-Ray subsegment](https://user-images.githubusercontent.com/105418424/224169195-4e2b6361-cc86-48e4-b41f-cc3f3df2e4ad.png)
+
+![X-Ray subsegment2](https://user-images.githubusercontent.com/105418424/224169290-41f1fd61-af6a-4b28-b41e-46bba82a3ebe.png)
+
+* Could see the subsegment trace successfully!
 ---------------
 ## CloudWatch Logs
 * Add ***watchtower*** to `requirements.txt`
