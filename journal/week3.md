@@ -51,8 +51,7 @@ Amplify.configure({
 * Corrected cognito vars in `App.js` in this commit  
 [Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/9023ac8038ffdb239bf98a7eb22f2b24b0ecd61a "correct commit")
 -------------
-### Configure Amplify
-Update Homepage view based on authentication check
+### Update Homepage view based on authentication check
  
 In `HomeFeedPage.js` file:
 ```js
