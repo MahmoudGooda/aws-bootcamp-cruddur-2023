@@ -45,16 +45,16 @@ services:
     #   timeout: 10s
     #   retries: 3
     #   start_period: 20s
-  xray-daemon:
-    image: "amazon/aws-xray-daemon"
-    environment:
-      AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
-      AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_REGION: "us-east-1"
-    command:
-      - "xray -o -b xray-daemon:2000"
-    ports:
-      - 2000:2000/udp
+  # xray-daemon:
+  #   image: "amazon/aws-xray-daemon"
+  #   environment:
+  #     AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
+  #     AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
+  #     AWS_REGION: "us-east-1"
+  #   command:
+  #     - "xray -o -b xray-daemon:2000"
+  #   ports:
+  #     - 2000:2000/udp
   db:
     image: postgres:13-alpine
     restart: always
