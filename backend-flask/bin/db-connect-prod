@@ -1,3 +1,0 @@
-#! /usr/bin/bash
-
-psql $PROD_CONNECTION_URL
