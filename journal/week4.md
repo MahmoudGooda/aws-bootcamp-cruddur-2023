@@ -539,9 +539,11 @@ User signUp triggered Lambda without errors!
 ### in the Lambda function:
 *  Replaced values with ***%s*** placeholders and let psycopg perform the conversion to avoid SQL injections. See [Psycopg docs](https://www.psycopg.org/docs/usage.html)  
 *  Including parameters for the sql query.  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-c4877c88b68c86e8d1cff23b7e5dd7f83dcc2472a1f3e22f2a9606b50338c33a)  
 
 ### Updates to return the correct user_uuid values
-* Updated the `user_handle` value in `app.py`, `HomeFeedPage.js`, and `ActivityForm.js` component
+* Updated the `user_handle` value in `app.py`, `HomeFeedPage.js`, and `ActivityForm.js` component  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-0014cc1f7ffd53e63ff797f0f2925a994fbd6797480d9ca5bbc5dc65f1b56438)  
 
 ### Test to post
 * Everytime I was facing a different error and each time I intentionaly changed the displayname and post to check the changes, then finally I could post with the correct username and see other users posts without errors.
