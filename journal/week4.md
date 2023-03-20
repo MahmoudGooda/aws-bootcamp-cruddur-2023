@@ -25,6 +25,7 @@ aws rds create-db-instance \
 ```
 
 ![image](https://user-images.githubusercontent.com/105418424/226103241-625fc702-ec3c-43e2-8b43-762004b70fbc.png)  
+
 All helpful RDS CLI actions from AWS Documentation can be found [Here](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/rds/index.html "AWS RDS CLI docs").
 
 --------------------
@@ -79,7 +80,7 @@ DROP TABLE IF EXISTS public.activities;
 export CONNECTION_URL="postgresql://postgres:pssword@127.0.0.1:5433/cruddur"
 gp env CONNECTION_URL="postgresql://postgres:pssword@127.0.0.1:5433/cruddur"
 ```
-* Create bash script named `db-connect`
+* Create bash script named `db-connect` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -111,7 +112,7 @@ chmod u+x bin/db-connect
 [Last update for the file in this commit](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/b7a821d8234f4cfbdaf3aea96d0886dff0e728e4#diff-0479ae0231d0d34113ed0e63eb5a2154e5df03cd4e9273b93bf0007478d5d0e0)
 
 ### Drop DB script
-* Create bash script named `db-drop`
+* Create bash script named `db-drop` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -128,7 +129,7 @@ psql $NO_DB_CONNECTION_URL -c "drop database cruddur;"
 
 ### See DB connections script
 * In order to be able to drop database without error we have to make sure there's no opened sessions, So we can the below script to check all opened sessions
-* Create bash script named `db-sessions`
+* Create bash script named `db-sessions` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -156,7 +157,7 @@ from pg_stat_activity;"
 [Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/03efde31d812c4ccc4f2fb53a85346e3508ce48a#diff-9944c35f487a5367ad39eaa01702055b1af4aa9ed6680409e72ce4fe779b1ff5)  
 
 ### Shell script to create the database
-* Create bash script named `db-create`
+* Create bash script named `db-create` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -173,7 +174,7 @@ psql $NO_DB_CONNECTION_URL -c "CREATE database cruddur;"
 [Updated the file in this commit](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/03efde31d812c4ccc4f2fb53a85346e3508ce48a#diff-3eff3d0efab2b7e67c6a01682312a43dbebabf33f9604b7118cd483d0adb9a1d)
 
 ### Shell script to load the schema
-* Create bash script named `db-schema-load`
+* Create bash script named `db-schema-load` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -199,7 +200,7 @@ psql $URL cruddur < $schema_path
 [Last update for the file in this commit](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/b7a821d8234f4cfbdaf3aea96d0886dff0e728e4#diff-018ca7bebb764207d620248995762b8afa4e2faf45c8dcee8df677e08358ddbc)
 
 ### Shell script to load the seed data
-* Create bash script named `db-seed`
+* Create bash script named `db-seed` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -225,7 +226,7 @@ psql $URL cruddur < $seed_path
 [Last update for the file in this commit](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/1c6d041df9076f715f74a38f431b702b6777ec94)
 
 ### Shell script to easily setup (reset) everything for our database
-* Create bash script named `db-setup`
+* Create bash script named `db-setup` in `backend-flask/bin`.
 ```sh
 #! /usr/bin/bash
 
@@ -400,7 +401,7 @@ psql $PROD_CONNECTION_URL
   Since I'm in `us-east-1` region, I used a precompiled *psycopg* library from [this Repo](https://github.com/jetbridge/psycopg2-lambda-layer) and unfortunately I faced problems in running the function.  
   I created my own develpment layer as below:  
 - Download the *psycopg2-binary* source files from this [Link](https://files.pythonhosted.org/packages/20/06/4581d1d6e35f2290319501708658208be0e57549b03ac733926a722d47d1/psycopg2_binary-2.9.5-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl)  
-- Using any archive tool, Extract to a folder.
+- Using any archiving tool, Extract to a folder "will output 3 folders".
 - Create folder structure (python/lib/python3.8/site-packages/ THE 3 FOLDERS) > Archive it as .zip file.
 - Create a new Lambda layer from (https://console.aws.amazon.com/lambda/home#/layers) > then upload the zip file.
 - Enter the created layer ARN into the Lambda Layers section.
@@ -445,7 +446,7 @@ psql $PROD_CONNECTION_URL
 
 ### The post confirmation function
 * Create folder `Lambdas` inside `aws` folder.  
-* In `Lambdas` folder. Create `cruddur-post-confirmationt.py`
+* Create `cruddur-post-confirmationt.py` in `aws/Lambdas`
 ```py
 import json
 import psycopg2
@@ -514,3 +515,35 @@ CONNECTION_URL: "${PROD_CONNECTION_URL}"
 ![image](https://user-images.githubusercontent.com/105418424/226114089-39393c26-126e-4383-90a1-1fb3441f0bec.png)
 
 User signUp triggered Lambda without errors!
+
+-------------------
+## Create new activities with a database insert
+  Following along with Andrew's ***Week 4 - Creating Activities*** video, I made some changes to enhance & tidy up the code.  
+
+### in db.py 
+* Updated  `db.py` library to have a `Db` class with the required functions.  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-4d4413b1b6b19e2bba84add763693470bf0abf242e3395c156c7b2a3a63b5ba1)  
+
+### in create_activity.py
+* Update `create_activity.py` to create & query activities replacing the mock model.  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-1e0e0142a9cba2b744624e9ece0b1e4f61074be40f499f4b0257180bc247e243)  
+
+### in home_activities.py
+* Moved the ***sql*** query portion as a template function in ***Db*** class of ***db*** library and used it instead.  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-e7fc4f0f2b4e4510d81bbc953fe4e4198587359967fc005d49cb23f39e7f3130)  
+
+### Group sql templates
+* Inside `db` folder, Create folder `sql/activities` folder containting db templates to be used.  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/118f1fd18d43ef508084fb498600791abca8a39e#diff-bde677e0d6c2c0d57cc752a9bd9b943e80a7dbafd5f754ad09d2fa39190e5ac9)  
+
+### in the Lambda function:
+*  Replaced values with ***%s*** placeholders and let psycopg perform the conversion to avoid SQL injections. See [Psycopg docs](https://www.psycopg.org/docs/usage.html)  
+*  Including parameters for the sql query.  
+
+### Updates to return the correct user_uuid values
+* Updated the `user_handle` value in `app.py`, `HomeFeedPage.js`, and `ActivityForm.js` component
+
+### Test to post
+* Everytime I was facing a different error and each time I intentionaly changed the displayname and post to check the changes, then finally I could post with the correct username and see other users posts without errors.
+
+![crud posts](https://user-images.githubusercontent.com/105418424/226402779-0f3f6f4f-ec96-4954-8dde-1d531f1a0c63.jpg)
