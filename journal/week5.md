@@ -1057,3 +1057,164 @@ console.log('data:',data)
 ### Test create message for new message group
 
 ![new message](https://user-images.githubusercontent.com/105418424/227783819-b13f039c-9c39-4524-bc0e-9d507cd66ec1.JPG)
+
+## Implement (Pattern E) Updating a Message Group using DynamoDB Streams
+
+### Update ddb schema-load script
+  Before creating our prod DynamoDB table, Update `backend-flask/bin/ddb/schema-load` to add GSI.  
+* In the *AttributeDefinitions*:
+```sh
+{
+      'AttributeName': 'message_group_uuid',
+      'AttributeType': 'S'
+    },
+```
+```sh
+GlobalSecondaryIndexes=[{
+    'IndexName':'message-group-sk-index',
+    'KeySchema':[{
+      'AttributeName': 'message_group_uuid',
+      'KeyType': 'HASH'
+    },{
+      'AttributeName': 'sk',
+      'KeyType': 'RANGE'
+    }],
+    'Projection': {
+      'ProjectionType': 'ALL'
+    },
+    'ProvisionedThroughput': {
+      'ReadCapacityUnits': 5,
+      'WriteCapacityUnits': 5
+    },
+  }],
+```
+* Create DynamoDB prod table  
+```sh
+cd backend-flask
+./bin/ddb/schema-load prod
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/7545bfb6ad5acdb8eaab8ef7aab3c5b04896de45)  
+
+---
+### Turn on stream
+* In the DynamoDb management console page:
+* Click ***"Exports and streams"*** tab and turn on streams on the table with 'new image' attributes included.
+
+![dynamodb-table](https://user-images.githubusercontent.com/105418424/227801815-6dbe5046-f229-497f-9200-b5ad2f6e6280.png)
+
+---
+### Create VPC Gateway Endpoint
+* From VPC Page in management console, Click ***"Endpoints"*** then create a VPC endpoint named `ddb-cruddur1`  
+* From services choose ***"dynamodb"*** (com.amazonaws.us-east-1.dynamodb)  
+* Then choose the VPC (the default one in my case)  
+
+![VPC-endpoint](https://user-images.githubusercontent.com/105418424/227800774-4179903f-f543-4b5c-976e-31b7a8630e2b.png)
+
+---
+### Create Lambda function
+* Create a new Lambda function named `cruddur-messaging-stream`  
+* Choose runtime "Python 3.9"  
+* By default a new IAM Role will be created with the same name of Lambda function "Will add permissions later"  
+* In ***"Advanced Settings"*** choose ***"Enable VPC"*** choose the VPC, subnets and the security group  
+* From ***"Configuration"*** tab choose ***"Permissions"*** then click on the IAM Role  
+* Click ***"Add permissions"*** then ***"Attach policy"*** and choose the ***"AWSLambdaInvocation-DynamoDB"***
+* We will need additional permissions, so again click ***"Add permissions"*** then ***"Create inline policy"***
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:Query"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:us-east-1:${AWS_ACCOUNT_ID}:table/cruddur-messages",
+                "arn:aws:dynamodb:us-east-1:${AWS_ACCOUNT_ID}:table/cruddur-messages/index/message-group-sk-index"
+            ]
+        }
+    ]
+  }
+```
+  '' The Resource name differs from one to another depending on **Region** and **AWS Accound ID** ''  
+Following along with Andrew, I created a new folder `aws/policies` and created the policy file `cruddur-message-stream-policy.json`  
+Also created a new file `cruddur-messaging-stream.py` in `aws/Lambdas` for the new Lambda function   
+
+Now the function has the appropriate permissions for DynamoDB
+
+* The function
+```py
+import json
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
+
+dynamodb = boto3.resource(
+ 'dynamodb',
+ region_name='us-east-1',
+ endpoint_url="http://dynamodb.us-east-1.amazonaws.com"
+)
+
+def lambda_handler(event, context):
+  print('event-data',event)
+
+  eventName = event['Records'][0]['eventName']
+  if (eventName == 'REMOVE'):
+    print("skip REMOVE event")
+    return
+  pk = event['Records'][0]['dynamodb']['Keys']['pk']['S']
+  sk = event['Records'][0]['dynamodb']['Keys']['sk']['S']
+  if pk.startswith('MSG#'):
+    group_uuid = pk.replace("MSG#","")
+    message = event['Records'][0]['dynamodb']['NewImage']['message']['S']
+    print("GRUP ===>",group_uuid,message)
+    
+    table_name = 'cruddur-messages'
+    index_name = 'message-group-sk-index'
+    table = dynamodb.Table(table_name)
+    data = table.query(
+      IndexName=index_name,
+      KeyConditionExpression=Key('message_group_uuid').eq(group_uuid)
+    )
+    print("RESP ===>",data['Items'])
+    
+    # recreate the message group rows with new SK value
+    for i in data['Items']:
+      delete_item = table.delete_item(Key={'pk': i['pk'], 'sk': i['sk']})
+      print("DELETE ===>",delete_item)
+      
+      response = table.put_item(
+        Item={
+          'pk': i['pk'],
+          'sk': sk,
+          'message_group_uuid':i['message_group_uuid'],
+          'message':message,
+          'user_display_name': i['user_display_name'],
+          'user_handle': i['user_handle'],
+          'user_uuid': i['user_uuid']
+        }
+      )
+      print("CREATE ===>",response)
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/9f2989647412a453ff18b8aef4066087af73f655)  
+
+---
+### Create a trigger in DynamoDB
+* In the DynamoDb management console page:  
+* Click ***"Exports and streams"*** tab and create a trigger  
+* Choose the **cruddur-messaging-stream** function  
+
+---
+### Create a new message and check
+* Create a new message and check if Lambda was triggered and items into the DynamoDB ***"cruddur-messages"*** table.  
+  '' To create a new message: After clicking the **messages** tab, Append `new/{the other user handle}` in the address bar '' 
+
+![new-message-prod](https://user-images.githubusercontent.com/105418424/227801910-71aff888-bd25-4f84-b6fc-a0acdeb1ec44.png)
+
+  CloudWatch logs shows no errors!
+![image](https://user-images.githubusercontent.com/105418424/227802878-2d93134a-3c20-421b-9e8d-3a600b4b640f.png)
+
+DynamoDB Table items
+![image](https://user-images.githubusercontent.com/105418424/227802155-b779e5fe-df05-44a1-8ea5-48ce05fec14f.png)
