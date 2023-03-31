@@ -1,4 +1,4 @@
-FROM python:3.10-slim-buster
+FROM public.ecr.aws/x7c0v0k6/cruddur-python:3.10-slim-buster
 
 WORKDIR /backend-flask
 
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 RUN chmod +x CMD-script.sh
-ENV FLASK_ENV=development
+ENV FLASK_DEBUG=1
 
 EXPOSE ${PORT}
 CMD ["/bin/bash", "./CMD-script.sh"] 
