@@ -728,3 +728,70 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
   
   ![from-ecs](https://user-images.githubusercontent.com/105418424/229341603-decb528d-6722-4ad2-b234-163d11223981.png)
 
+## Domain Bought!
+* My website domain will be ***cruddur.space***  
+
+## Manage your domain using Route53 via hosted zone
+* Create a new Route53 hosted zone ( Public with our domain name)  
+
+## Create an SSL certificate via ACM
+* From ***AWS Certificate Manager*** Service, Request a new public certificate.  
+* In the name entered domain name `"cruddur.space"` and add another one `"*.cruddur.space"`.  
+* From the certificate page, Click **"Create records in Route 53"** and select both Domains you entered perviously.  
+
+### Update ALB Listeners
+* From Load Balancer page, Add 2 new listeners  
+  - First listener from port *80* > Action > redirects to HTTPS 443  
+  - Second Listener from port *443* > Action > forwards to *Frontend-react-js* target group  
+  - Choose the certificate we just created previously  
+  - Remove other listeners  
+  - Update the *443* Listener rules to forward *api.cruddur.space* to *backend-flask* target group  
+  
+  ![443-LB-rule](https://user-images.githubusercontent.com/105418424/229364052-19244cbc-dddb-47a8-b4ea-b4d56ed0e36e.png)
+
+### Add ALB records in Route53 Hosted zone
+* From Route53 Hosted zone page, Create 2 new records  
+  - First record for naked domain to point to *frontend-react-js* ( Choose the *Alias* and region and load balancer)  
+  - Second record for api subdomain to point to *the backend-flask*
+
+  ![image](https://user-images.githubusercontent.com/105418424/229362996-f88ce9a3-8c7a-4aaa-b8dc-dada9697dbcf.png)
+
+* Hosted zone records should look like this now  
+
+![image](https://user-images.githubusercontent.com/105418424/229363084-6d4c7782-0f30-4862-8831-f7b903a7d844.png)
+
+### Test redirection
+* Now let's check the backend service traffic redirection from health check endpoint!  
+
+![api-redirection](https://user-images.githubusercontent.com/105418424/229363416-eeb9ec69-1e47-4865-9c10-e945854065c2.png)
+![api-redirection2](https://user-images.githubusercontent.com/105418424/229363436-1592314f-3131-4681-86ae-b6889491d5bc.png)
+
+### Configure CORS to only permit traffic from our domain
+
+* Update backend & frontend URLs under *ernvironment* in `service-backend-flask.json`  
+```json
+{"name": "FRONTEND_URL", "value": "https://cruddur.space"},
+{"name": "BACKEND_URL", "value": "https://api.cruddur.space"},
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/f8ce275cd723c168e37beb1c77c94f463a0eac64)  
+
+* Re-register the new task definition  
+```sh
+aws ecs register-task-definition --cli-input-json file://aws/task-definitions/backend-flask.json
+```
+
+* Rebuild the *frontend-react-js* image with the new backend URL  
+```sh
+docker build \
+--build-arg REACT_APP_BACKEND_URL="https://api.cruddur.space" \
+--build-arg REACT_APP_AWS_PROJECT_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_COGNITO_REGION="$AWS_DEFAULT_REGION" \
+--build-arg REACT_APP_AWS_USER_POOLS_ID="${REACT_APP_AWS_USER_POOLS_ID}" \
+--build-arg REACT_APP_CLIENT_ID="${REACT_APP_CLIENT_ID}" \
+-t frontend-react-js \
+-f Dockerfile.prod \
+.
+```
+* Home page with the new domain name!  
+
+![homepage with new domain-ecs](https://user-images.githubusercontent.com/105418424/229363810-77f1cf7e-5363-46f5-973d-292a1651f23c.png)
