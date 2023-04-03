@@ -1,0 +1,7 @@
+#! /usr/bin/bash
+
+ECR_BACKEND_FLASK_URL="public.ecr.aws/x7c0v0k6/backend-flask"
+echo $ECR_BACKEND_FLASK_URL
+
+docker tag backend-flask-prod:latest $ECR_BACKEND_FLASK_URL:latest
+docker push $ECR_BACKEND_FLASK_URL:latest
