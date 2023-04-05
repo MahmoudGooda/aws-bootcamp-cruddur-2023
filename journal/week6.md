@@ -117,6 +117,7 @@ docker push $ECR_BACKEND_FLASK_URL:latest
 
 ![image](https://user-images.githubusercontent.com/105418424/229291023-f6379599-5a25-48ad-9a4c-519fd81d1076.png)  
 
+---
 ## Deploy Backend Flask app as a service to Fargate
 
 * To deploy the backend service we'll need to create a task definition which will require an excution & task roles and some parameters defined  
@@ -428,7 +429,7 @@ https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-wor
 * Test Flask app health check  
 ![image](https://user-images.githubusercontent.com/105418424/229297066-145b3d7d-d1c4-43ea-b0ed-2d927cb9fc13.png)
 
-
+---
 ## Provision and configure Application Load Balancer along with target groups
 
 ### Create Target groups for ALB  
@@ -473,7 +474,7 @@ https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-wor
     }
   ],
 ```
-
+---
 ## Create ECR repo and push image for fronted-react-js
 
 ### To push frontend-react image
@@ -728,6 +729,7 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
   
   ![from-ecs](https://user-images.githubusercontent.com/105418424/229341603-decb528d-6722-4ad2-b234-163d11223981.png)
 
+---
 ## Domain Bought!
 * My website domain will be ***cruddur.space***  
 
@@ -758,7 +760,7 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
 
 * Hosted zone records should look like this now  
 
-![image](https://user-images.githubusercontent.com/105418424/229363084-6d4c7782-0f30-4862-8831-f7b903a7d844.png)
+  ![image](https://user-images.githubusercontent.com/105418424/229363084-6d4c7782-0f30-4862-8831-f7b903a7d844.png)
 
 ### Test redirection
 * Now let's check the backend service traffic redirection from health check endpoint!  
@@ -795,3 +797,103 @@ docker build \
 * Home page with the new domain name!  
 
 ![homepage with new domain-ecs](https://user-images.githubusercontent.com/105418424/229363810-77f1cf7e-5363-46f5-973d-292a1651f23c.png)
+
+## 	Secure Flask by not running in debug mode
+  ''Enable debugging in development only''  
+* Update the backend-flask `Dockerfile` to use `--debug` flag in flask run command  
+* To prevent debug mode from production environment:  
+  - use `"--no-debugger"` and `"--no-reload` flags in the `Dockerfile.prod` CMD   
+```Dockerfile
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=4567", "--no-debug","--no-debugger","--no-reload"]
+```
+* Build the backend-flask docker-prod image  
+* Intentionally break anything in the backend code to produce an error, that should result (Internal server error)  
+
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/b0f0ef559c0e7e40191a317512b730c8d2666e7f)  
+
+## Implement Refresh Token for Amazon Cognito
+
+In order to resolve the expiring token problem, we have to use a method to refresh the current user session.  
+
+* Below will create a function to get the access token and update the authentication check to set the access token into local storage  
+* Update the `frontend-react-js/src/lib/CheckAuth.js`  
+```js
+import { Auth } from 'aws-amplify';
+import { resolvePath } from 'react-router-dom';
+
+export async function getAccessToken(){
+  Auth.currentSession()
+  .then((cognito_user_session) => {
+    const access_token = cognito_user_session.accessToken.jwtToken
+    localStorage.setItem("access_token", access_token)
+  })
+  .catch((err) => console.log(err));
+}
+
+export async function checkAuth(setUser){
+  Auth.currentAuthenticatedUser({
+    // Optional, By default is false. 
+    // If set to true, this call will send a 
+    // request to Cognito to get the latest user data
+    bypassCache: false 
+  })
+  .then((cognito_user) => {
+    console.log('cognito_user',cognito_user);
+    setUser({
+      display_name: cognito_user.attributes.name,
+      handle: cognito_user.attributes.preferred_username
+    })
+    return Auth.currentSession()
+  }).then((cognito_user_session) => {
+      console.log('cognito_user_session',cognito_user_session);
+      localStorage.setItem("access_token", cognito_user_session.accessToken.jwtToken)
+  })
+  .catch((err) => console.log(err));
+};
+```
+---
+### Apply the update to the authentication required pages
+* Update `MessageForm.js`, `HomeFeedPage.js`, `MessageGroupPage.js`, `MessageGroupsPage.js`  
+* Import function  
+```js
+import {getAccessToken} from '../lib/CheckAuth';
+```
+* Get access token  
+```js
+await getAccessToken()
+      const access_token = localStorage.getItem("access_token")
+```
+Replace the ***Authorization header*** line  
+```js
+'Authorization': `Bearer ${access_token}`,
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/4fc590d7b50f9e0e15537fc024687d7a4a35f7cf#diff-716a46d7255bdc7f3c7c1f5f463d4580b0f4dcb288e9027b432ea13e8baebdf9)  
+
+* Same update for `MessageGroupNewPage.js`  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/5242a233cc825ae23c25c586e3738d4b8933e792)  
+
+---
+## Refactor bin directory to be top level
+First I created the required scripts, then restructured the **bin** directory containing all scripts  
+
+* Created scripts for docker build, run, and ecs services connect  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/1ad644d9d402477d41516ae290941806d7f70301)  
+Then corrected the ***build*** script backend path in the below commit  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/2bf18aac27074f2053ab7e33da9e1f2fb776427d)  
+
+* In the below commit located the new scripts folder structure  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/e9dda86a64e3a552268ea3f045460b0c5fc3c774)
+
+* Updated the ***RDS SG update*** script path in `.gitpod.yml`  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/a432c9c9905b59f5cccc34c99911acdb4a3fe9f0)  
+
+* Created a script to kill all DB sessions  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/610ae0b013ee6e70d693c2cb5cd61fc0361bc681)  
+Noticed a `command not found` for python in the `db/setup` script, so update the command to `python3`  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/b50bba311f73820426d7d7250ac36faf6940d572)  
+
+* Updated the ***parent_path*** in the `ddb/patterns/list-conversations` script  
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/6bc1a016b18435b21df0a37ec90306e191e7e0e4)  
+
+* Finally here's the ***bin*** file structure so far!  
+[bin file](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/tree/main/bin)
