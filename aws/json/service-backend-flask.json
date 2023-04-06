@@ -6,7 +6,7 @@
   "enableExecuteCommand": true,
   "loadBalancers": [
     {
-        "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:${AWS_ACCOUNT_ID}:targetgroup/cruddur-backend-flask-tg/c8075badfee04eea",
+        "targetGroupArn": "${targetGroupArn}",
         "containerName": "backend-flask",
         "containerPort": 4567
     }
