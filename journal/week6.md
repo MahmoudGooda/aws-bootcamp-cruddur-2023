@@ -897,3 +897,200 @@ Noticed a `command not found` for python in the `db/setup` script, so update the
 
 * Finally here's the ***bin*** file structure so far!  
 [bin file](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/tree/main/bin)
+
+---
+## Configure task defintions to contain X-RAY
+* In backend & frontend task definitions add the follwing defintion for X-RAY  
+`aws/task-definitions/backend-flask.json` & `aws/task-definitions/frontend-react-js.json` under ***"containerDefinitions"***  
+```json
+{
+      "name": "xray",
+      "image": "public.ecr.aws/xray/aws-xray-daemon" ,
+      "essential": true,
+      "user": "1337",
+      "portMappings": [
+        {
+          "name": "xray",
+          "containerPort": 2000,
+          "protocol": "udp"
+        }
+      ]
+    },
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/63434cb4edf3de95fae1fba5ac611232ca815538)  
+
+* Need to register the updated task definition.  
+  ''In order to make it easier, Create ***register*** script for registering task definitions''  
+
+  In `bin/backend/register`  
+```sh
+#! /usr/bin/bash
+
+ABS_PATH=$(readlink -f "$0")
+BACKEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $BACKEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+TASK_DEF_PATH="$PROJECT_PATH/aws/task-definitions/backend-flask.json"
+
+echo $TASK_DEF_PATH
+
+aws ecs register-task-definition --cli-input-json "file://$TASK_DEF_PATH"
+```
+  In `bin/frontend/register`  
+```sh
+#! /usr/bin/bash
+
+ABS_PATH=$(readlink -f "$0")
+FRONTEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $FRONTEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+TASK_DEF_PATH="$PROJECT_PATH/aws/task-definitions/frontend-react-js.json"
+
+echo $TASK_DEF_PATH
+
+aws ecs register-task-definition --cli-input-json "file://$TASK_DEF_PATH"
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/8498136586b2d3973a2f0af4767e2769428045eb)  
+
+* Register the update task definition via script  
+---
+## Generate .env files using ruby for docker
+  ''After storing variables in a `.env` file, the ***docker run*** command didn't pass some variables correctly''  
+
+  Following along with Andrew, Created a ruby script to generate ***.env*** files using ***erb templates***  
+
+* Create a folder `erb` for the erb files in the project root folder  
+* Create `.erb` files with the variables to generate from  
+
+`backend-flask.env.erb`   
+```ruby
+AWS_ENDPOINT_URL=http://dynamodb-local:8000
+CONNECTION_URL=postgresql://postgres:password@db:5432/cruddur
+FRONTEND_URL=https://3000-<%= ENV['GITPOD_WORKSPACE_ID'] %>.<%= ENV['GITPOD_WORKSPACE_CLUSTER_HOST'] %>
+BACKEND_URL=https://4567-<%= ENV['GITPOD_WORKSPACE_ID'] %>.<%= ENV['GITPOD_WORKSPACE_CLUSTER_HOST'] %>
+OTEL_SERVICE_NAME=backend-flask
+OTEL_EXPORTER_OTLP_ENDPOINT=https://api.honeycomb.io
+OTEL_EXPORTER_OTLP_HEADERS=x-honeycomb-team=<%= ENV['HONEYCOMB_API_KEY'] %>
+AWS_XRAY_URL=*4567-<%= ENV['GITPOD_WORKSPACE_ID'] %>.<%= ENV['GITPOD_WORKSPACE_CLUSTER_HOST'] %>*
+AWS_XRAY_DAEMON_ADDRESS=xray-daemon:2000
+AWS_DEFAULT_REGION=<%= ENV['AWS_DEFAULT_REGION'] %>
+AWS_ACCESS_KEY_ID=<%= ENV['AWS_ACCESS_KEY_ID'] %>
+AWS_SECRET_ACCESS_KEY=<%= ENV['AWS_SECRET_ACCESS_KEY'] %>
+ROLLBAR_ACCESS_TOKEN=<%= ENV['ROLLBAR_ACCESS_TOKEN'] %>
+AWS_COGNITO_USER_POOL_ID=<%= ENV['AWS_COGNITO_USER_POOL_ID'] %>
+AWS_COGNITO_USER_POOL_CLIENT_ID=<%= ENV['AWS_COGNITO_USER_POOL_CLIENT_ID'] %>
+```
+
+`frontend-react-js.env.erb`  
+```ruby
+REACT_APP_BACKEND_URL=https://4567-<%= ENV['GITPOD_WORKSPACE_ID'] %>.<%= ENV['GITPOD_WORKSPACE_CLUSTER_HOST'] %>
+REACT_APP_AWS_PROJECT_REGION=<%= ENV['AWS_DEFAULT_REGION'] %>
+REACT_APP_AWS_COGNITO_REGION=<%= ENV['AWS_DEFAULT_REGION'] %>
+REACT_APP_AWS_USER_POOLS_ID=<%= ENV['REACT_APP_AWS_USER_POOLS_ID'] %>
+REACT_APP_CLIENT_ID=<%= ENV['REACT_APP_CLIENT_ID'] %>
+```
+* Create the ruby scripts  
+
+`bin/backend/generate-env`
+```ruby
+#!/usr/bin/env ruby
+
+require 'erb'
+
+template = File.read 'erb/backend-flask.env.erb'
+content = ERB.new(template).result(binding)
+filename = "backend-flask.env"
+File.write(filename, content)
+```
+
+`bin/frontend/generate-env`
+```ruby
+#!/usr/bin/env ruby
+
+require 'erb'
+
+template = File.read 'erb/frontend-react-js.env.erb'
+content = ERB.new(template).result(binding)
+filename = "frontend-react-js.env"
+File.write(filename, content)
+```
+
+* To generate the env files anytime, just run the `generate-env` scripts  
+
+  ''Now after generating the .env files, we don't want to push these secrets into our github repo''  
+* Add `*.env` into `.gitignore` file  
+
+* add the below 2 commands in `.gitpod.yml` to run ***"generate-env"*** scripts at workspace launch  
+```yml
+source "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
+source "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/b895c1079b13b540590c2a4f3e4168227e7c4a66)  
+
+---
+### Create ***docker run*** scripts
+`bin/backend/run`  
+```sh
+#! /usr/bin/bash
+
+ABS_PATH=$(readlink -f "$0")
+BACKEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $BACKEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+ENVFILE_PATH="$PROJECT_PATH/backend-flask.env"
+
+docker run --rm \
+  --env-file $ENVFILE_PATH \
+  --network cruddur-net \
+  --publish 4567:4567 \
+  -it backend-flask-prod
+```
+
+`bin/frontend/run`  
+```sh
+#! /usr/bin/bash
+
+ABS_PATH=$(readlink -f "$0")
+FRONTEND_PATH=$(dirname $ABS_PATH)
+BIN_PATH=$(dirname $FRONTEND_PATH)
+PROJECT_PATH=$(dirname $BIN_PATH)
+ENVFILE_PATH="$PROJECT_PATH/frontend-react-js.env"
+
+docker run --rm \
+  --env-file $ENVFILE_PATH \
+  --network cruddur-net \
+  --publish 3000:3000 \
+  -it frontend-react-js
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/ff04b9e91883ff9e1574a58559c6c0821656e3bf)  
+
+---
+## Change Docker Compose to explicitly use env files and user-defined network
+### To use the variables from our generated .env files  
+* In `docker-compose.yml` file, replace the ***environment*** definition and it's contents in frontend/backend services with the below:  
+```yml
+env_file:
+      - backend-flask.env
+```
+```yml
+env_file:
+      - frontend-react-js.env
+```
+### To use our defined network  
+* Replace the ***networks*** section with the below:  
+```yml
+networks:
+  cruddur-net:
+    driver: bridge
+    name: cruddur-net
+```
+* Add the below network definition under every service  
+```yml
+networks:
+      - cruddur-net
+```
+[Commit link](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/commit/53d5126961d1de26ab798fcaa77ae1ca8a8841e6)  
+
+---
+## 	Create Dockerfile specfically for production use case
+* Check all `Dockerfile.prod` files to make sure there's no unwated tools exist
