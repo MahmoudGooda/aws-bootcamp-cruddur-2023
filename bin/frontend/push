@@ -1,7 +1,7 @@
 #! /usr/bin/bash
 
 
-ECR_FRONTEND_REACT_URL="public.ecr.aws/x7c0v0k6/frontend-react-js"
+ECR_FRONTEND_REACT_URL="public.ecr.aws/$ECR_ALIAS/frontend-react-js"
 echo $ECR_FRONTEND_REACT_URL
 
 docker tag frontend-react-js:latest $ECR_FRONTEND_REACT_URL:latest
