@@ -899,7 +899,7 @@ Noticed a `command not found` for python in the `db/setup` script, so update the
 [bin file](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/tree/main/bin)
 
 ---
-## Configure task defintions to contain X-RAY
+## Configure task definitions to contain X-RAY
 * In backend & frontend task definitions add the follwing defintion for X-RAY  
 `aws/task-definitions/backend-flask.json` & `aws/task-definitions/frontend-react-js.json` under ***"containerDefinitions"***  
 ```json
