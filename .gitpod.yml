@@ -28,8 +28,8 @@ tasks:
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
       source "$THEIA_WORKSPACE_ROOT/bin/rds/rds-sg-update"
-      source "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
-      source "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
+      ruby "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
+      ruby "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
