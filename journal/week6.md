@@ -770,7 +770,7 @@ aws ecs create-service --cli-input-json file://aws/json/service-frontend-react-j
 
 ### Configure CORS to only permit traffic from our domain
 
-* Update backend & frontend URLs under *ernvironment* in `service-backend-flask.json`  
+* Update backend & frontend URLs under *environment* in `service-backend-flask.json`  
 ```json
 {"name": "FRONTEND_URL", "value": "https://cruddur.space"},
 {"name": "BACKEND_URL", "value": "https://api.cruddur.space"},
