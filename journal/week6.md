@@ -1093,4 +1093,4 @@ networks:
 
 ---
 ## 	Create Dockerfile specfically for production use case
-* Check all `Dockerfile.prod` files to make sure there's no unwated tools exist
+* Check all `Dockerfile.prod` files to make sure there's no unwanted tools exist
