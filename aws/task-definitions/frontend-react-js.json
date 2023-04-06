@@ -10,8 +10,21 @@
   ],
   "containerDefinitions": [
     {
+      "name": "xray",
+      "image": "public.ecr.aws/xray/aws-xray-daemon" ,
+      "essential": true,
+      "user": "1337",
+      "portMappings": [
+        {
+          "name": "xray",
+          "containerPort": 2000,
+          "protocol": "udp"
+        }
+      ]
+    },
+    {
       "name": "frontend-react-js",
-      "image": "public.ecr.aws/x7c0v0k6/frontend-react-js",
+      "image": "public.ecr.aws/$ECR_ALIAS/frontend-react-js",
       "essential": true,
       "healthCheck": {
         "command": [
