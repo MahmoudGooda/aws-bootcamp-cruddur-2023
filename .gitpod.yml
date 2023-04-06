@@ -15,6 +15,10 @@ tasks:
   - name: Workspace Initialization
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
+    before: |
+      curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
+      sudo dpkg -i session-manager-plugin.deb
+      cd backend-flask
     init: |
       cd $THEIA_WORKSPACE_ROOT/backend-flask
       pip3 install -r requirements.txt
@@ -24,11 +28,8 @@ tasks:
     command: |
       export GITPOD_IP=$(curl ifconfig.me)
       source "$THEIA_WORKSPACE_ROOT/bin/rds/rds-sg-update"
-  - name: fargate
-    before: |
-      curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" -o "session-manager-plugin.deb"
-      sudo dpkg -i session-manager-plugin.deb
-      cd backend-flask
+      source "$THEIA_WORKSPACE_ROOT/bin/backend/generate-env"
+      source "$THEIA_WORKSPACE_ROOT/bin/frontend/generate-env"
 vscode:
   extensions:
     - 42Crunch.vscode-openapi
