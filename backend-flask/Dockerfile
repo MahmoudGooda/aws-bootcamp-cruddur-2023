@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
 COPY . .
 RUN chmod +x CMD-script.sh
 ENV FLASK_DEBUG=1
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE ${PORT}
 CMD ["/bin/bash", "./CMD-script.sh"] 
