@@ -251,7 +251,7 @@ def data_search():
 @app.route("/api/activities", methods=['POST','OPTIONS'])
 @cross_origin()
 def data_activities():
-  user_handle = request.json["user_handle"]
+  user_handle = "MGOODA"
   message = request.json['message']
   ttl = request.json['ttl']
   model = CreateActivity.run(message, user_handle, ttl)
@@ -293,7 +293,7 @@ def data_update_profile():
   try:
     claims = cognito_jwt_token.verify(access_token)
     cognito_user_id = claims['sub']
-    UpdateProfile.run(
+    model = UpdateProfile.run(
       cognito_user_id=cognito_user_id,
       bio=bio,
       display_name=display_name
