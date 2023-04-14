@@ -17,6 +17,7 @@ import {
 } from "react-router-dom";
 
 import { Amplify } from 'aws-amplify';
+import './components/Popup.css';
 
 Amplify.configure({
   "AWS_PROJECT_REGION": process.env.REACT_APP_AWS_PROJECT_REGION,
