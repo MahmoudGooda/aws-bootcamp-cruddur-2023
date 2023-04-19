@@ -1,6 +1,6 @@
 require 'aws-sdk-s3'
 require 'json'
-require 'jwt'
+# require 'jwt'
 
 def handler(event:, context:)
   puts event
@@ -10,7 +10,7 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin": "https://3000-mahmoudgood-awsbootcamp-takm48wq9ut.ws-eu94.gitpod.io",
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200
@@ -22,8 +22,12 @@ def handler(event:, context:)
     body_hash = JSON.parse(event["body"])
     extension = body_hash["extension"]
 
-    decoded_token = JWT.decode token, nil, false
-    cognito_user_uuid = decoded_token[0]['sub']
+    # decoded_token = JWT.decode token, nil, false
+    # cognito_user_uuid = decoded_token[0]['sub']
+
+    cognito_user_uuid = event["requestContext"]["authorizer"]["lambda"]["sub"]
+
+    puts({step:'presign url', sub_value: cognito_user_uuid}.to_json)
 
     s3 = Aws::S3::Resource.new
     bucket_name = ENV["UPLOADS_BUCKET_NAME"]
@@ -38,7 +42,7 @@ def handler(event:, context:)
     { 
       headers: {
         "Access-Control-Allow-Headers": "*, Authorization",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Origin": "https://3000-mahmoudgood-awsbootcamp-takm48wq9ut.ws-eu94.gitpod.io",
         "Access-Control-Allow-Methods": "OPTIONS,GET,POST"
       },
       statusCode: 200, 
