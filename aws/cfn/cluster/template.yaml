@@ -27,52 +27,52 @@ Parameters:
   FrontendPort:
     Type: Number
     Default: 3000
-  FrontendHealthCheckIntervalSeconds:
-    Type: Number
-    Default: 15
   FrontendHealthCheckPath:
     Type: String
     Default: "/"
   FrontendHealthCheckPort:
     Type: String
-    Default: 80
+    Default: 3000
   FrontendHealthCheckProtocol:
     Type: String
     Default: HTTP
-  FrontendHealthCheckTimeoutSeconds:
-    Type: Number
-    Default: 5
   FrontendHealthyThresholdCount:
     Type: Number
     Default: 2
   FrontendUnhealthyThresholdCount:
     Type: Number
-    Default: 2
+    Default: 3
+  FrontendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 15
+  FrontendHealthCheckIntervalSeconds:
+    Type: Number
+    Default: 20
   #Backend ------
   BackendPort:
     Type: Number
     Default: 4567
-  BackendHealthCheckIntervalSeconds:
-    Type: String
-    Default: 15
   BackendHealthCheckPath:
     Type: String
     Default: "/api/health-check"
   BackendHealthCheckPort:
     Type: String
-    Default: 80
+    Default: 4567
   BackendHealthCheckProtocol:
     Type: String
     Default: HTTP
-  BackendHealthCheckTimeoutSeconds:
-    Type: Number
-    Default: 5
   BackendHealthyThresholdCount:
     Type: Number
     Default: 2
   BackendUnhealthyThresholdCount:
     Type: Number
-    Default: 2
+    Default: 3
+  BackendHealthCheckTimeoutSeconds:
+    Type: Number
+    Default: 15
+  BackendHealthCheckIntervalSeconds:
+    Type: String
+    Default: 20
 Resources:
   FargateCluster:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-cluster.html
@@ -83,7 +83,7 @@ Resources:
         - FARGATE
       ClusterSettings:
         - Name: containerInsights
-          Value: enabled
+          Value: disabled
       Configuration:
         ExecuteCommandConfiguration:
           # KmsKeyId: !Ref KmsKeyId
@@ -112,7 +112,7 @@ Resources:
         - Key: routing.http.preserve_host_header.enabled
           Value: false
         - Key: deletion_protection.enabled
-          Value: true
+          Value: false
         - Key: load_balancing.cross_zone.enabled
           Value: true
         - Key: access_logs.s3.enabled
@@ -184,6 +184,21 @@ Resources:
           ToPort: 80
           CidrIp: '0.0.0.0/0'
           Description: INTERNET HTTP
+  ServiceSG:
+    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub "${AWS::StackName}ServSG"
+      GroupDescription: Security for Fargate Services for Cruddur
+      VpcId:
+        Fn::ImportValue:
+          !Sub ${NetworkingStack}VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          SourceSecurityGroupId: !GetAtt ALBSG.GroupId
+          FromPort: !Ref BackendPort
+          ToPort: !Ref BackendPort
+          Description: ALB HTTP
   BackendTG:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
@@ -199,6 +214,7 @@ Resources:
       HealthyThresholdCount: !Ref BackendHealthyThresholdCount
       UnhealthyThresholdCount: !Ref BackendUnhealthyThresholdCount
       IpAddressType: ipv4
+      TargetType: ip
       Matcher: 
         HttpCode: 200
       Protocol: HTTP
@@ -224,6 +240,7 @@ Resources:
       HealthyThresholdCount: !Ref FrontendHealthyThresholdCount
       UnhealthyThresholdCount: !Ref FrontendUnhealthyThresholdCount
       IpAddressType: ipv4
+      TargetType: ip
       Matcher: 
         HttpCode: 200
       Protocol: HTTP
@@ -239,7 +256,19 @@ Outputs:
     Value: !Ref FargateCluster
     Export:
       Name: !Sub "${AWS::StackName}ClusterName"
+  ServiceSecurityGroupId:
+    Value: !GetAtt ServiceSG.GroupId
+    Export:
+      Name: !Sub "${AWS::StackName}ServiceSecurityGroupId"
   ALBSecurityGroupId:
     Value: !GetAtt ALBSG.GroupId
     Export:
       Name: !Sub "${AWS::StackName}ALBSecurityGroupId"
+  FrontendTGArn:
+    Value: !Ref FrontendTG
+    Export:
+      Name: !Sub "${AWS::StackName}FrontendTGArn"
+  BackendTGArn:
+    Value: !Ref BackendTG
+    Export:
+      Name: !Sub "${AWS::StackName}BackendTGArn"
