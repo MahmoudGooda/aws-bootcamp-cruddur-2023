@@ -6,3 +6,4 @@ node_modules
 aws/cfn/cluster/*.toml
 .aws-sam
 tmp/*
+aws/cfn/frontend/*.toml
