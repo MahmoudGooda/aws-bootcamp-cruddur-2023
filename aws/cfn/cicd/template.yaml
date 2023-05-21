@@ -86,9 +86,9 @@ Resources:
                 ClusterName:
                   Fn::ImportValue:
                     !Sub ${ClusterStack}ClusterName
-                ServiceName:
-                  Fn::ImportValue:
-                    !Sub ${ServiceStack}ServiceName
+                ServiceName: backend-flask  # value is hardcoded to be able to delete the service stack whenever wanted to
+                  # Fn::ImportValue:
+                  #   !Sub ${ServiceStack}ServiceName
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
