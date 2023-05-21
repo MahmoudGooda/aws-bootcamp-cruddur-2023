@@ -50,8 +50,10 @@ Parameters:
     Default: 'arn:aws:ssm:${AWS::REGION}:${AWS::ACCOUNT}:parameter/cruddur/backend-flask/AWS_COGNITO_USER_POOL_CLIENT_ID'
   EnvFrontendUrl:
     Type: String
+    Default: "https://cruddur.space"
   EnvBackendUrl:
     Type: String
+    Default: "https://api.cruddur.space"
   SecretsAWSAccessKeyId:
     Type: String
     Default: 'arn:aws:ssm:${AWS::REGION}:${AWS::ACCOUNT}:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID'
