@@ -16,12 +16,17 @@ Parameters:
     Type: String
   ArtifactBucketName:
     Type: String
+  BuildSpec:
+    Type: String
 Resources:
-  CodeBuildBakeImageStack:
+  CodeBuild:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-stack.html
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: nested/codebuild.yaml
+      Parameters:
+        ArtifactBucketName: !Ref ArtifactBucketName
+        BuildSpec: !Ref BuildSpec
   CodeStarConnection:
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-codestarconnections-connection.html
     Type: AWS::CodeStarConnections::Connection
@@ -67,7 +72,7 @@ Resources:
               OutputArtifacts:
                 - Name: ImageDefinition
               Configuration:
-                ProjectName: !GetAtt CodeBuildBakeImageStack.Outputs.CodeBuildProjectName
+                ProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
                 BatchEnabled: false
         # https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-ECS.html
         - Name: Deploy
@@ -101,6 +106,16 @@ Resources:
         Version: '2012-10-17'
       Path: /
       Policies:
+        - PolicyName: !Sub ${AWS::StackName}S3ArtifactAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action:
+                - s3:*
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucketName}
+                  - !Sub arn:aws:s3:::${ArtifactBucketName}/*
         - PolicyName: !Sub ${AWS::StackName}EcsDeployPolicy
           PolicyDocument:
             Version: '2012-10-17'
@@ -152,6 +167,7 @@ Resources:
                 - codebuild:StartBuild
                 - codebuild:StopBuild
                 - codebuild:RetryBuild
+                - codebuild:BatchGetBuilds
                 Effect: Allow
                 Resource: !Join
                   - ''
@@ -160,4 +176,4 @@ Resources:
                     - ':'
                     - !Ref AWS::AccountId
                     - ':project/'
-                    - !GetAtt CodeBuildBakeImageStack.Outputs.CodeBuildProjectName
+                    - !GetAtt CodeBuild.Outputs.CodeBuildProjectName
