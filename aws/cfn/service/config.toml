@@ -2,3 +2,7 @@
 bucket = 'cfn-artifacts-space'
 region = 'us-east-1'
 stack_name = 'CrdSrvBackendFlask'
+
+[parameters]
+EnvFrontendUrl = 'https://cruddur.space'
+EnvBackendUrl = 'https://api.cruddur.space'
