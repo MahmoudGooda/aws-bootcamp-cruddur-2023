@@ -82,11 +82,13 @@ Resources:
                 - ecr-public:BatchCheckLayerAvailability
                 - ecr-public:CompleteLayerUpload
                 - ecr-public:GetAuthorizationToken
+                - ecr:GetAuthorizationToken
                 - ecr-public:InitiateLayerUpload
                 - ecr:BatchGetImage
                 - ecr:GetDownloadUrlForLayer
                 - ecr-public:PutImage
                 - ecr-public:UploadLayerPart
+                - sts:GetServiceBearerToken
                 Effect: Allow
                 Resource: "*"
         - PolicyName: !Sub ${AWS::StackName}VPCPolicy
