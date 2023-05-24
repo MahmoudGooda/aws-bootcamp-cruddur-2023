@@ -1,0 +1,29 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Sid": "VisualEditor0",
+        "Effect": "Allow",
+        "Action": [
+            "ecr-public:BatchCheckLayerAvailability",
+            "ecr-public:CompleteLayerUpload",
+            "ecr-public:GetAuthorizationToken",
+            "ecr-public:InitiateLayerUpload",
+            "ecr-public:PutImage",
+            "ecr-public:UploadLayerPart"
+        ],
+        "Resource": [
+            "*"
+        ]
+    },
+    {
+        "Effect": "Allow",
+        "Action": [
+            "sts:GetServiceBearerToken"
+        ],
+        "Resource": [
+            "*"
+        ]
+        }
+    ]
+}
