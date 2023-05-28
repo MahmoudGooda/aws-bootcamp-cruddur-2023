@@ -30,9 +30,6 @@ export default function FormErrorItem(props) {
         case 'user_reciever_handle_blank':
           return "You need to send a message to a valid user"
           break;
-        case 'user_reciever_handle_blank':
-          return "You need to send a message to a valid user"
-          break;
         // Profile
         case 'display_name_blank':
           return "The display name cannot be blank"
