@@ -9,6 +9,7 @@
   height: 148px;
   border-radius: 999px;
   border: solid 8px var(--fg);
+  background-color: rgb(179, 179, 179)
 }
 
 .profile_heading .banner {

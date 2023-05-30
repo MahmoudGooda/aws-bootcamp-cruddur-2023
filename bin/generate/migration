@@ -17,7 +17,6 @@ filename = f"{timestamp}_{name}.py"
 klass = name.replace('_', ' ').title().replace(' ','')
 
 file_content = f"""
-
 from lib.db import db
 
 class {klass}Migration:
@@ -29,14 +28,16 @@ class {klass}Migration:
     data = \"\"\"
     \"\"\"
     return data
+
   def migrate():
     db.query_commit({klass}Migration.migrate_sql(),{{
     }})
+
   def rollback():
     db.query_commit({klass}Migration.rollback_sql(),{{
     }})
 
-migration = AddBioColumnMigration
+migration = {klass}Migration
 """
 # remove leading and trailing new lines
 file_content = file_content.lstrip('\n').rstrip('\n')
