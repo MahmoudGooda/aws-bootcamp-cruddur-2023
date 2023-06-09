@@ -1,4 +1,4 @@
-# Week 10 — CloudFormation Part 1
+# Week 10 — CloudFormation
 
 ### In this week we are using CloudFormation templates to create our project resources & components  
 
