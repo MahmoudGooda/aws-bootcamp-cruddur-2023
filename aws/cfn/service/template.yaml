@@ -54,6 +54,9 @@ Parameters:
   EnvBackendUrl:
     Type: String
     Default: "https://api.cruddur.space"
+  EnvFlaskENV:
+    Type: String
+    Default: "production"
   SecretsAWSAccessKeyId:
     Type: String
     Default: 'arn:aws:ssm:${AWS::REGION}:${AWS::ACCOUNT}:parameter/cruddur/backend-flask/AWS_ACCESS_KEY_ID'
@@ -168,6 +171,8 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-stream-prefix: !Ref ServiceName
           Environment:
+            - Name: FLASK_ENV
+              Value: !Ref EnvFlaskENV
             - Name: DDB_MESSAGE_TABLE
               Value: !Ref DDBMessageTable
             - Name: 'OTEL_SERVICE_NAME'
