@@ -1,17 +1,26 @@
 # FREE AWS Cloud Project Bootcamp
+![Codebuild](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/assets/105418424/730426b2-40de-48bd-90d5-7e1bad87e742)
+- Application: **Cruddur**
+- Cohort: **2023-A1**
+- The project is about a micro-blogging platform designed to redefine the way we share and engage with ephemeral posts, known as "**Cruds**".
+- Frontend has been written in Javascript using **ReactJS** and backend in Python using **Flask**.
+- AWS services used, such as:  
+☁️ **Lambda:** For serverless computing and dynamic backend operations.<br/>
+🛠️ **CloudFormation:** Enabling infrastructure as code for efficient resource management.<br/>
+🌐 **Route53:** Ensuring seamless and reliable DNS management.<br/>
+🚀 **CodePipeline:** Streamlining the CI/CD process for rapid deployments.<br/>
+🗃️ **RDS:** Providing robust relational database capabilities.<br/>
+📦 **S3:** Satisfying all storage needs, from static assets to data warehousing.<br/>
+⚖️ **Load Balancing:** Ensuring high availability and scalability.<br/>
+🌍 **CloudFront:** Accelerating content delivery with low latency.<br/>
+🚪 **API Gateway:** Building and managing APIs with ease.<br/>
+And more!<br/>
 
-- Application: Cruddur
-- Cohort: 2023-A1
-
-This is the starting codebase that will be used in the FREE AWS Cloud Project Bootcamp 2023
+- In the end, I obtained the AWS Cloud Project Bootcamp Certificate (Gold Squad) with Demonstration of Remarkable Skills as a Cloud Engineer.
 
 ![Cruddur Graphic](_docs/assets/cruddur-banner.jpg)
-
-![Cruddur Screenshot](_docs/assets/cruddur-screenshot.png)
-
-## Instructions
-
-At the start of the bootcamp you need to create a new Github Repository from this template.
+## Application Sample
+![Cruddur Screenshot](https://github.com/MahmoudGooda/aws-bootcamp-cruddur-2023/assets/105418424/8794cf4e-7331-4197-838e-529e8e5c0caa)
 
 ## Journaling Homework
 
